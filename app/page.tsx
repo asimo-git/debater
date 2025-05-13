@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import ChatField from "./components/ChatField";
+import { Message } from "./utils/interfaces";
 
 export default function Home() {
   const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+  const [message, setMessage] = useState<Message | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setAnswer("Генерируется...");
+    setMessage({ role: "user", content: question });
 
     const res = await fetch("/api/ask", {
       method: "POST",
@@ -17,12 +19,11 @@ export default function Home() {
     });
 
     const data = await res.json();
-    // console.log(data);
-    setAnswer(data.answer);
+    setMessage({ role: "bot", content: data.answer });
   };
 
   return (
-    <main className="p-4">
+    <main className="p-4 h-screen flex flex-col">
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
@@ -36,11 +37,7 @@ export default function Home() {
         </button>
       </form>
 
-      {answer && (
-        <div className="mt-4 p-4 border">
-          <strong>Ответ:</strong> {answer}
-        </div>
-      )}
+      <ChatField message={message} />
     </main>
   );
 }
