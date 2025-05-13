@@ -1,23 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Message } from "../utils/interfaces";
+import { useEffect, useRef } from "react";
+import { RootState } from "../store/store";
+import { useSelector } from "react-redux";
 
-export default function ChatField({ message }: { message: Message | null }) {
-  const [messages, setMessages] = useState<Message[]>(() => {
-    const storedChat = localStorage.getItem("chat_history");
-    return storedChat ? JSON.parse(storedChat) : [];
-  });
-
+export default function ChatField() {
+  const messages = useSelector((state: RootState) => state.chat.messages);
   const bottomBorder = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (message) {
-      const updated = [...messages, message];
-      setMessages(updated);
-      localStorage.setItem("chat_history", JSON.stringify(updated));
-    }
-  }, [message]);
 
   useEffect(() => {
     bottomBorder.current?.scrollIntoView({ behavior: "smooth" });

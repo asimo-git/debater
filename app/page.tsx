@@ -2,15 +2,18 @@
 
 import { useState } from "react";
 import ChatField from "./components/ChatField";
-import { Message } from "./utils/interfaces";
+import { useDispatch, useSelector } from "react-redux";
+import { addMessage } from "./store/chatSlice";
+import { RootState } from "./store/store";
 
 export default function Home() {
   const [question, setQuestion] = useState("");
-  const [message, setMessage] = useState<Message | null>(null);
+  const dispatch = useDispatch();
+  const messages = useSelector((state: RootState) => state.chat.messages);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setMessage({ role: "user", content: question });
+    dispatch(addMessage({ role: "user", content: question }));
 
     const res = await fetch("/api/ask", {
       method: "POST",
@@ -19,7 +22,7 @@ export default function Home() {
     });
 
     const data = await res.json();
-    setMessage({ role: "bot", content: data.answer });
+    dispatch(addMessage({ role: "bot", content: data.answer }));
   };
 
   return (
@@ -29,7 +32,11 @@ export default function Home() {
           type="text"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Задай тему спора"
+          placeholder={
+            messages.length > 0
+              ? "Продолжай спорить!"
+              : "Напиши утверждение, с которым я поспорю"
+          }
           className="border p-2 w-full"
         />
         <button type="submit" className="bg-blue-500 text-white px-4 py-2">
@@ -37,7 +44,7 @@ export default function Home() {
         </button>
       </form>
 
-      <ChatField message={message} />
+      <ChatField />
     </main>
   );
 }
