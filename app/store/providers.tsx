@@ -18,7 +18,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       const unsubscribe = store.subscribe(() => {
         localStorage.setItem(
           "chat_history",
-          JSON.stringify(store.getState().chat)
+          JSON.stringify(store.getState().chat.messages)
         );
       });
 

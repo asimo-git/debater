@@ -17,11 +17,9 @@ const chatSlice = createSlice({
       state.messages = [];
       localStorage.removeItem("chat_history");
     },
-    hydrate: (state, action: PayloadAction<ChatState>) => {
+    hydrate: (state, action: PayloadAction<Message[]>) => {
       return {
-        messages: Array.isArray(action.payload.messages)
-          ? action.payload.messages
-          : [],
+        messages: Array.isArray(action.payload) ? action.payload : [],
       };
     },
   },
