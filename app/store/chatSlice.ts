@@ -3,6 +3,7 @@ import { ChatState, Message } from "../utils/interfaces";
 
 const initialState: ChatState = {
   messages: [],
+  isLoading: false,
 };
 
 const chatSlice = createSlice({
@@ -19,11 +20,15 @@ const chatSlice = createSlice({
     },
     hydrate: (state, action: PayloadAction<Message[]>) => {
       return {
+        isLoading: false,
         messages: Array.isArray(action.payload) ? action.payload : [],
       };
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
     },
   },
 });
 
-export const { addMessage, resetChat } = chatSlice.actions;
+export const { addMessage, resetChat, setLoading } = chatSlice.actions;
 export default chatSlice.reducer;

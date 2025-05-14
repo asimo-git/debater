@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 
 export default function ChatField() {
   const messages = useSelector((state: RootState) => state.chat.messages);
+  const isLoading = useSelector((state: RootState) => state.chat.isLoading);
   const bottomBorder = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -26,6 +27,11 @@ export default function ChatField() {
           <strong>{msg.role === "bot" && "Спорщик:"}</strong> {msg.content}
         </div>
       ))}
+      {isLoading && (
+        <div className="ml-2 p-2 rounded bg-gray-700 text-sm italic text-gray-300">
+          Спорщик думает<span className="typing"></span>
+        </div>
+      )}
       {/* пустой элемент-закладка для автоскролла */}
       <div ref={bottomBorder} />
     </div>

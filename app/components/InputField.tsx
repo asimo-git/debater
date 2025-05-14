@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { addMessage } from "../store/chatSlice";
+import { addMessage, setLoading } from "../store/chatSlice";
 
 export default function InputField() {
   const [question, setQuestion] = useState("");
@@ -17,8 +17,9 @@ export default function InputField() {
         ? `Продолжай спорить с моими доводами. Не повторяйся. Я утверждаю: ${question}`
         : `Я утверждаю: ${question} Придумай аргументы против этой идеи. Спорь логично и разумно.`;
     dispatch(addMessage({ role: "user", content: question }));
+    setQuestion("");
 
-    console.log(prompt);
+    dispatch(setLoading(true));
 
     const res = await fetch("/api/ask", {
       method: "POST",
@@ -27,8 +28,8 @@ export default function InputField() {
     });
 
     const data = await res.json();
+    dispatch(setLoading(false));
     dispatch(addMessage({ role: "bot", content: data.answer }));
-    setQuestion("");
   };
 
   return (
