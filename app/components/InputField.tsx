@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { addMessage, setLoading } from "../store/chatSlice";
+import { RemoveChatButton } from "./RemoveChatButton";
 
 export default function InputField() {
   const [question, setQuestion] = useState("");
@@ -45,9 +46,13 @@ export default function InputField() {
         }
         className="border p-2 w-full"
       />
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2">
+      <button
+        type="submit"
+        className="bg-blue-500 rounded text-white px-4 py-2"
+      >
         Отправить
       </button>
+      <RemoveChatButton />
     </form>
   );
 }
